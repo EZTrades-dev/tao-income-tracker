@@ -1,0 +1,33 @@
+{
+  "name": "tao-income-tracker",
+  "version": "1.0.0",
+  "description": "A web application for tracking realized staking rewards income from the Bittensor network",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 main.py",
+    "dev": "python3 -m http.server 8080",
+    "test": "python3 test_api.py"
+  },
+  "keywords": [
+    "bittensor",
+    "tao",
+    "staking",
+    "income",
+    "tracker",
+    "cryptocurrency",
+    "blockchain"
+  ],
+  "author": "Tao Income Tracker",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EZTrades-dev/tao-income-tracker.git"
+  },
+  "homepage": "https://EZTrades-dev.github.io/tao-income-tracker",
+  "bugs": {
+    "url": "https://github.com/EZTrades-dev/tao-income-tracker/issues"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

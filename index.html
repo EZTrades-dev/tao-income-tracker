@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tao Income Tracker</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
+            color: #1a237e;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1565c0 0%, #1976d2 50%, #42a5f5 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 12px 40px rgba(21, 101, 192, 0.25);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .disclaimer {
+            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .input-section {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 248, 255, 0.9) 100%);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(25, 118, 210, 0.15);
+            margin-bottom: 25px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(25, 118, 210, 0.1);
+        }
+
+        .output-section {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 248, 255, 0.9) 100%);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(25, 118, 210, 0.15);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(25, 118, 210, 0.1);
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #ffffff 0%, #e3f2fd 50%, #bbdefb 100%);
+            padding: 25px;
+            border-radius: 16px;
+            border-left: 6px solid #1976d2;
+            box-shadow: 0 6px 24px rgba(25, 118, 210, 0.12);
+            transition: all 0.3s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(25, 118, 210, 0.2);
+            background: linear-gradient(135deg, #ffffff 0%, #e8f4fd 50%, #c5e1ff 100%);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 248, 255, 0.9) 100%);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(25, 118, 210, 0.15);
+            backdrop-filter: blur(15px);
+        }
+
+        .data-table th {
+            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+            padding: 18px;
+            text-align: left;
+            font-weight: 600;
+            color: white;
+            border-bottom: 3px solid #0d47a1;
+        }
+
+        .data-table td {
+            padding: 18px;
+            border-bottom: 2px solid rgba(25, 118, 210, 0.1);
+        }
+
+        .data-table tr:nth-child(even) {
+            background: linear-gradient(135deg, rgba(227, 242, 253, 0.8) 0%, rgba(187, 222, 251, 0.6) 100%);
+        }
+
+        .data-table tr:nth-child(odd) {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 248, 255, 0.8) 100%);
+        }
+
+        .data-table tr:hover {
+            background: linear-gradient(135deg, rgba(25, 118, 210, 0.1) 0%, rgba(21, 101, 192, 0.08) 100%);
+            transition: all 0.3s ease;
+            transform: scale(1.01);
+        }
+
+        .button {
+            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+            color: white;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(25, 118, 210, 0.3);
+        }
+
+        .button:hover {
+            background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(25, 118, 210, 0.4);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1a237e;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 3px solid #bbdefb;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 248, 255, 0.9) 100%);
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #1976d2;
+            box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.15);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(240, 248, 255, 0.95) 100%);
+            transform: scale(1.02);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #1976d2;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .column-guide {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 248, 255, 0.9) 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(25, 118, 210, 0.1);
+            border: 1px solid rgba(25, 118, 210, 0.1);
+        }
+
+        .column-guide h3 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+
+        .column-guide ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .column-guide li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .column-guide li:before {
+            content: "•";
+            color: #1976d2;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .export-button {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .export-button:hover {
+            background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+            transform: translateY(-1px);
+        }
+
+        .data-note {
+            background: rgba(25, 118, 210, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #1976d2;
+            font-size: 14px;
+            color: #1a237e;
+        }
+
+        .cors-notice {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 2px solid #ffc107;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="disclaimer">
+                <strong>⚠️ THESE AMOUNTS MAY NOT BE CORRECT. NOT FINANCIAL OR TAX ADVICE. SEEK A TAX PROFESSIONAL ⚠️</strong>
+            </div>
+            <h1>📊 Tao Income Tracker</h1>
+            <p>Track your realized staking rewards income</p>
+        </div>
+
+        <div class="cors-notice">
+            <strong>🌐 Browser CORS Notice:</strong> This application makes direct API calls to tao.app. If you encounter CORS errors, you may need to use a browser extension like "CORS Unblock" or run this locally with the backend server.
+        </div>
+
+        <div class="input-section">
+            <h2>📝 Input Parameters</h2>
+            <div class="input-group">
+                <label for="apiKey">Tao.app API Key:</label>
+                <input type="password" id="apiKey" placeholder="Enter your tao.app API key">
+            </div>
+            <div class="input-group">
+                <label for="coldKey">Cold Key Wallet Address:</label>
+                <input type="text" id="coldKey" placeholder="Enter your cold key wallet address">
+            </div>
+            <div class="input-group">
+                <label for="days">Historical Data Period:</label>
+                <select id="days">
+                    <option value="1">1 Day</option>
+                    <option value="2">2 Days</option>
+                    <option value="7">7 Days</option>
+                </select>
+            </div>
+            <button class="button" onclick="fetchData()">📈 Calculate Staking Rewards</button>
+        </div>
+
+        <div class="output-section" id="outputSection" style="display: none;">
+            <h2>📊 Results</h2>
+            <div id="loading" class="loading">
+                <p>🔄 Loading data...</p>
+            </div>
+            <div id="error" class="error" style="display: none;"></div>
+            <div id="success" class="success" style="display: none;"></div>
+            
+            <div id="summaryGrid" style="display: none;">
+                <div class="summary-card">
+                    <h3>💰 Total Staking Rewards</h3>
+                    <p id="totalRewards">$0.00</p>
+                </div>
+                <div class="summary-card">
+                    <h3>📈 Balance Change</h3>
+                    <p id="totalBalanceChange">$0.00</p>
+                </div>
+                <div class="summary-card">
+                    <h3>💰 Past Hour Rewards</h3>
+                    <p id="pastHourRewards">$0.00</p>
+                </div>
+                <div class="summary-card">
+                    <h3>📊 Past Period Rewards</h3>
+                    <p id="past24HoursRewards">$0.00</p>
+                </div>
+                <div class="summary-card">
+                    <h3>📅 Period Analyzed</h3>
+                    <p id="periodAnalyzed">-</p>
+                </div>
+                <div class="summary-card">
+                    <h3>📊 Data Points</h3>
+                    <p id="dataPoints">0</p>
+                </div>
+            </div>
+
+            <div class="data-note" id="dataNote" style="display: none;">
+                <strong>📊 Data Information:</strong><br>
+                • Real-time price correlation with balance timestamps<br>
+                • Subnet 0 (TAO) uses TAO USD price, other subnets use token USD prices<br>
+                • Historical data from tao.app API with hourly sampling<br>
+                • All calculations performed client-side for privacy
+            </div>
+
+            <div class="column-guide">
+                <h3>📋 Table Column Guide</h3>
+                <ul>
+                    <li><strong>Timestamp:</strong> When the data was recorded</li>
+                    <li><strong>Subnet:</strong> Which Bittensor subnet (0 = TAO, others = different tokens)</li>
+                    <li><strong>Token Amount:</strong> How many tokens you have at this time</li>
+                    <li><strong>Token Price (USD):</strong> Current price of the token in US dollars</li>
+                    <li><strong>Balance Value (USD):</strong> Total value of your tokens in US dollars</li>
+                    <li><strong>Rewards Earned (Tokens):</strong> New tokens earned in this hour</li>
+                    <li><strong>Rewards Value (USD):</strong> Dollar value of tokens earned this hour</li>
+                </ul>
+                <p style="margin-top: 15px; font-size: 14px; color: #666;">
+                    <strong>Example:</strong> Subnet 0: 0.229071 TAO at $373.84 USD = $85.62 value. 
+                    Subnet 1: 0.001228 tokens at $6.35 USD = $0.008 value.
+                </p>
+            </div>
+
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                <h3>📊 Balance History</h3>
+                <button class="export-button" id="exportButton" style="display: none;" onclick="exportToCSV()">📊 Export to CSV</button>
+            </div>
+            <div id="balanceTable"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'https://api.tao.app/api/beta';
+        const API_KEY = '2a2fae0b63c6850ace6abee0ccbd5ab6d3dc56a83556cb5115b68d3e1fa0f694';
+
+        async function fetchData() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const coldKey = document.getElementById('coldKey').value.trim();
+            const days = parseInt(document.getElementById('days').value);
+
+            if (!apiKey || !coldKey) {
+                showError('Please enter both API key and cold key address.');
+                return;
+            }
+
+            showLoading();
+            hideError();
+            hideSuccess();
+
+            try {
+                console.log('Fetching data for coldkey:', coldKey);
+                
+                const endDate = new Date();
+                const startDate = new Date(endDate.getTime() - (days * 24 * 60 * 60 * 1000));
+                
+                console.log('Date range:', startDate.toISOString(), 'to', endDate.toISOString());
+
+                // Fetch balance data
+                const balanceResponse = await fetch(`${API_BASE_URL}/portfolio/balance?coldkey=${coldKey}`, {
+                    headers: {
+                        'X-API-Key': apiKey,
+                        'Accept': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    }
+                });
+
+                if (!balanceResponse.ok) {
+                    throw new Error(`Balance API error: ${balanceResponse.status} ${balanceResponse.statusText}`);
+                }
+
+                const balanceData = await balanceResponse.json();
+                console.log('Balance response:', balanceData);
+
+                if (!balanceData.success || !balanceData.data) {
+                    throw new Error('Invalid balance data received');
+                }
+
+                // Fetch historical prices for all subnets
+                const uniqueSubnets = [...new Set(balanceData.data.map(item => item.netuid))];
+                const historicalPrices = {};
+                
+                for (const netuid of uniqueSubnets) {
+                    try {
+                        const priceResponse = await fetch(`${API_BASE_URL}/analytics/subnets/valuation?netuid=${netuid}&start=${startDate.toISOString()}&end=${endDate.toISOString()}`, {
+                            headers: {
+                                'X-API-Key': apiKey,
+                                'Accept': 'application/json',
+                                'Cache-Control': 'no-cache'
+                            }
+                        });
+                        
+                        if (priceResponse.ok) {
+                            const priceData = await priceResponse.json();
+                            historicalPrices[netuid] = priceData.data || [];
+                        }
+                    } catch (error) {
+                        console.warn(`Failed to fetch prices for subnet ${netuid}:`, error);
+                    }
+                }
+
+                processBalanceData(balanceData.data, historicalPrices, days);
+                
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                showError(`Error fetching data: ${error.message}`);
+            }
+        }
+
+        function processBalanceData(balanceData, historicalPrices, currentDays) {
+            console.log('Processing balance data:', balanceData.length, 'entries');
+            
+            const now = new Date();
+            const periodStart = new Date(now.getTime() - (currentDays * 24 * 60 * 60 * 1000));
+            
+            console.log('Filtering data from:', periodStart.toISOString(), 'to', now.toISOString());
+            
+            // Filter data to only include entries from the selected period
+            const filteredData = balanceData.filter(entry => {
+                const entryDate = new Date(entry.timestamp);
+                return entryDate >= periodStart && entryDate <= now;
+            });
+            
+            console.log('Filtered data:', filteredData.length, 'entries');
+
+            if (filteredData.length === 0) {
+                showError('No data found for the selected time period. Try a different time range or check your cold key address.');
+                return;
+            }
+
+            const processedData = [];
+            
+            // Group data by subnet
+            const subnetGroups = {};
+            filteredData.forEach(entry => {
+                if (!subnetGroups[entry.netuid]) {
+                    subnetGroups[entry.netuid] = [];
+                }
+                subnetGroups[entry.netuid].push(entry);
+            });
+
+            // Process each subnet's data
+            Object.keys(subnetGroups).forEach(netuid => {
+                const subnetData = subnetGroups[netuid].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                
+                for (let i = 0; i < subnetData.length - 1; i++) {
+                    const currentEntry = subnetData[i];
+                    const nextEntry = subnetData[i + 1];
+                    
+                    // Get price data for this timestamp
+                    const priceData = getPriceAtTime(historicalPrices[netuid] || [], new Date(currentEntry.timestamp));
+                    
+                    const tokenPriceUSD = netuid == 0 ? 
+                        (priceData?.tao_price_usd || 373.84) : 
+                        (priceData?.alpha_price_usd || currentEntry.price || 0);
+                    
+                    const taoPriceUSD = priceData?.tao_price_usd || 373.84;
+                    
+                    const rewardsEarned = currentEntry.tokenAmount - nextEntry.tokenAmount;
+                    const rewardsValueUSD = rewardsEarned * tokenPriceUSD;
+                    
+                    processedData.push({
+                        timestamp: new Date(currentEntry.timestamp),
+                        netuid: parseInt(netuid),
+                        tokenAmount: currentEntry.tokenAmount,
+                        tokenPriceUSD: tokenPriceUSD,
+                        taoPriceUSD: taoPriceUSD,
+                        balanceValue: currentEntry.tokenAmount * tokenPriceUSD,
+                        rewardsEarned: rewardsEarned,
+                        rewardsValueUSD: rewardsValueUSD
+                    });
+                }
+            });
+
+            // Sort by timestamp (newest first)
+            processedData.sort((a, b) => b.timestamp - a.timestamp);
+            
+            console.log('Processed data:', processedData.length, 'entries');
+            
+            calculateTotals(processedData, currentDays);
+            displayBalanceTable(processedData);
+            displaySummary(processedData, currentDays);
+            
+            hideLoading();
+            showSuccess('Data loaded successfully!');
+        }
+
+        function getPriceAtTime(priceData, timestamp) {
+            if (!priceData || priceData.length === 0) return null;
+            
+            // Find the closest price entry to the timestamp
+            let closest = priceData[0];
+            let minDiff = Math.abs(new Date(priceData[0].timestamp) - timestamp);
+            
+            for (const price of priceData) {
+                const diff = Math.abs(new Date(price.timestamp) - timestamp);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closest = price;
+                }
+            }
+            
+            return closest;
+        }
+
+        function calculateTotals(processedData, currentDays) {
+            const now = new Date();
+            const oneHourAgo = new Date(now.getTime() - (60 * 60 * 1000));
+            const periodStart = new Date(now.getTime() - (currentDays * 24 * 60 * 60 * 1000));
+            
+            let totalRewardsUSD = 0;
+            let totalBalanceChange = 0;
+            let mostRecentRewards = [];
+            let dailyRewards = [];
+            
+            // Group by subnet for calculations
+            const subnetGroups = {};
+            processedData.forEach(entry => {
+                if (!subnetGroups[entry.netuid]) {
+                    subnetGroups[entry.netuid] = [];
+                }
+                subnetGroups[entry.netuid].push(entry);
+            });
+            
+            Object.keys(subnetGroups).forEach(netuid => {
+                const subnetData = subnetGroups[netuid].sort((a, b) => b.timestamp - a.timestamp);
+                
+                if (subnetData.length > 0) {
+                    const mostRecent = subnetData[0];
+                    const oldest = subnetData[subnetData.length - 1];
+                    
+                    // Calculate hourly reward (most recent positive change)
+                    if (mostRecent.rewardsEarned > 0 && mostRecent.timestamp >= oneHourAgo) {
+                        mostRecentRewards.push(mostRecent.rewardsValueUSD);
+                    }
+                    
+                    // Calculate total reward for the period
+                    const totalRewardUSD = mostRecent.tokenAmount - oldest.tokenAmount;
+                    if (totalRewardUSD > 0) {
+                        dailyRewards.push(totalRewardUSD * mostRecent.tokenPriceUSD);
+                    }
+                    
+                    // Add to total rewards
+                    totalRewardsUSD += subnetData.reduce((sum, entry) => sum + (entry.rewardsValueUSD > 0 ? entry.rewardsValueUSD : 0), 0);
+                    
+                    // Calculate balance change
+                    const balanceChange = (mostRecent.balanceValue - oldest.balanceValue);
+                    totalBalanceChange += balanceChange;
+                }
+            });
+            
+            const pastHourRewards = mostRecentRewards.reduce((sum, reward) => sum + reward, 0);
+            const pastPeriodRewards = dailyRewards.reduce((sum, reward) => sum + reward, 0);
+            
+            console.log('=== FINAL TOTALS ===');
+            console.log('Most recent rewards collected:', mostRecentRewards.length, 'rewards');
+            console.log('Daily rewards collected:', dailyRewards.length, 'rewards');
+            console.log('Past Hour Rewards: $' + pastHourRewards.toFixed(6));
+            console.log('Past Period Rewards: $' + pastPeriodRewards.toFixed(6));
+            console.log('Total Rewards: $' + totalRewardsUSD.toFixed(6));
+            
+            document.getElementById('totalRewards').textContent = '$' + totalRewardsUSD.toFixed(2);
+            document.getElementById('totalBalanceChange').textContent = '$' + totalBalanceChange.toFixed(2);
+            document.getElementById('pastHourRewards').textContent = '$' + pastHourRewards.toFixed(2);
+            document.getElementById('past24HoursRewards').textContent = '$' + pastPeriodRewards.toFixed(2);
+        }
+
+        function displayBalanceTable(processedData) {
+            const tableContainer = document.getElementById('balanceTable');
+            
+            if (processedData.length === 0) {
+                tableContainer.innerHTML = '<p>No data available for the selected time period.</p>';
+                return;
+            }
+            
+            let tableHTML = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Subnet</th>
+                            <th>Token Amount</th>
+                            <th>Token Price (USD)</th>
+                            <th>Balance Value (USD)</th>
+                            <th>Rewards Earned (Tokens)</th>
+                            <th>Rewards Value (USD)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            processedData.forEach(entry => {
+                const timestamp = entry.timestamp.toLocaleString('en-US', {
+                    month: '2-digit',
+                    day: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                });
+                
+                const subnetName = entry.netuid === 0 ? 'Subnet 0 (TAO)' : `Subnet ${entry.netuid}`;
+                const rewardsEarned = entry.rewardsEarned > 0 ? entry.rewardsEarned.toFixed(6) + ' tokens' : '0.000000 tokens';
+                const rewardsValueUSD = entry.rewardsValueUSD > 0 ? '$' + entry.rewardsValueUSD.toFixed(3) : '$0.000';
+                
+                tableHTML += `
+                    <tr>
+                        <td>${timestamp}</td>
+                        <td>${subnetName}</td>
+                        <td>${entry.tokenAmount.toFixed(6)}</td>
+                        <td>$${entry.tokenPriceUSD.toFixed(6)}</td>
+                        <td>$${entry.balanceValue.toFixed(2)}</td>
+                        <td>${rewardsEarned}</td>
+                        <td>${rewardsValueUSD}</td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += '</tbody></table>';
+            tableContainer.innerHTML = tableHTML;
+            
+            // Show export button
+            document.getElementById('exportButton').style.display = 'inline-block';
+        }
+
+        function displaySummary(processedData, currentDays) {
+            const periodText = currentDays === 1 ? '24 hours' : currentDays === 2 ? '48 hours' : '7 days';
+            
+            document.getElementById('periodAnalyzed').textContent = `${periodText} ending now`;
+            document.getElementById('dataPoints').textContent = processedData.length;
+            
+            const dataNote = document.getElementById('dataNote');
+            dataNote.innerHTML = `
+                <strong>📊 Data Information:</strong><br>
+                • Showing portfolio balance data from the last ${periodText}<br>
+                • Data is current and up-to-date<br>
+                • Real-time price correlation with balance timestamps<br>
+                • Subnet 0 (TAO) uses TAO USD price, other subnets use token USD prices
+            `;
+            dataNote.style.display = 'block';
+            
+            document.getElementById('summaryGrid').style.display = 'grid';
+        }
+
+        function exportToCSV() {
+            const table = document.querySelector('.data-table');
+            if (!table) return;
+            
+            let csv = [];
+            const rows = table.querySelectorAll('tr');
+            
+            for (const row of rows) {
+                const cols = row.querySelectorAll('td, th');
+                const rowData = [];
+                
+                for (const col of cols) {
+                    let text = col.textContent || col.innerText;
+                    // Clean up the data
+                    text = text.replace('$', '').replace(' tokens', '');
+                    rowData.push('"' + text + '"');
+                }
+                
+                csv.push(rowData.join(','));
+            }
+            
+            const csvContent = csv.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `tao_income_data_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('summaryGrid').style.display = 'none';
+            document.getElementById('balanceTable').innerHTML = '';
+            document.getElementById('exportButton').style.display = 'none';
+            document.getElementById('dataNote').style.display = 'none';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            hideLoading();
+        }
+
+        function hideError() {
+            document.getElementById('error').style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        function hideSuccess() {
+            document.getElementById('success').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
