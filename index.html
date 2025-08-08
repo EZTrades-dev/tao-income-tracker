@@ -279,6 +279,34 @@
             border: 2px solid #ffc107;
             font-weight: 600;
         }
+
+        .api-security-notice {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 2px solid #28a745;
+            font-weight: 600;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(25, 118, 210, 0.15);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -293,6 +321,10 @@
 
         <div class="cors-notice">
             <strong>🌐 Browser CORS Notice:</strong> This application makes direct API calls to tao.app. If you encounter CORS errors, you may need to use a browser extension like "CORS Unblock" or run this locally with the backend server.
+        </div>
+
+        <div class="api-security-notice">
+            <strong>🔐 API Key Security:</strong> It's advised to generate a new API key after use for enhanced security.
         </div>
 
         <div class="input-section">
@@ -382,6 +414,10 @@
             </div>
             <div id="balanceTable"></div>
         </div>
+    </div>
+
+    <div class="footer">
+        <p>Powered by tao.app API</p>
     </div>
 
     <script>
